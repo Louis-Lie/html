@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script>
+    
+    function hi(){
+      
+      console.log('hihi');
+    }
+    
+//to select cases for specific test plan
+
+function insertAfter(newElement, targetElement){
+  var parent = targetElement.parentNode;
+  if (parent.lastChild == targetElement){
+    parent.appendChild(newElement);
+  } else {
+    parent.insertBefore(newElement, targetElement.nextSibling);
+  }
+
+
+}
+function casesSelection(){
+  if (document.getElementById('caseslist')){
+    return;
+  }
+  
+  var forms = document.getElementsByClassName('form-group');
+  var planName = function(){
+    for (f of forms){
+      var ip = f.getElementsByTagName('input')[0];
+      if (ip['name'] == 'testplan' && ip['value']){
+        return ip['name'];
+      }
+      return;
+    }
+  }();
+  console.log(planName);
+  if ( ! planName ){
+      alert('You must choose a test plan!!');
+      return;
+    }
+
+    for (var i=0; i < forms.length; i++){
+        var ip = forms[i].getElementsByTagName('input')[0];
+        
+        if (ip['name'] == 'cases'){
+          var selection = document.createElement('div');
+          selection.id = 'caseslist';
+          selection.style.height = '200px';
+          selection.style.overflow = 'auto-y';
+          var cases = function(){
+            var jsonObj = JSON.parse(document.getElementById('casesDict').textContent);
+            var cl = jsonObj.plan1.map( function(x) {
+                return '<div class="checkbox"><label><input type="checkbox" value=""><span class="cr"></span>' + x + '</label></div>';  
+            }             
+            )
+            return cl.join('');
+          }();
+          selection.class = 'col-sm-12';
+          selection.innerHTML += cases;
+          selection.innerHTML += '<button type="button" class="btn btn-primary" onclick="saveCases()">Save</button>';
+          insertAfter(selection, forms[i]);
+        }
+     }
+}
+      
+         
+    //finishes cases selecting
+    function saveCases(){
+
+
+
+
+
+      
+    }
+  </script>
+</head>
+<body>
+
+<div class="container">
+  <h2>Form control: input</h2>
+  <p style="display:None" id='casesDict'>{"plan1":["c1", "c2", "c4", "c5"], "plan2":["c3","c4"]}</p>
+  <p>The form below contains two input elements; one of type text and one of type password:</p>
+  <form>
+    
+    <div class="form-group">
+      <label for="usr">TestPlan:</label>
+      <input type="text" class="form-control" id="usr" name="testplan" value="plan1" onclick="hi()">
+    </div>
+    <div class="form-group">
+      <label for="usr">Cases:</label>
+      <input type="text" class="form-control" id="usr" name="cases" onclick="casesSelection()">
+    </div>
+    <div class="form-group">
+      <label for="pwd">Password:</label>
+      <input type="password" class="form-control" id="pwd">
+    </div>
+  </form>
+</div>
+
+</body>
+</html>
